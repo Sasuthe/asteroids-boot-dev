@@ -7,6 +7,11 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
 
+        # Required by pygame.sprite.Sprite
+        diameter = self.radius * 2
+        self.image = pygame.Surface((diameter, diameter), pygame.SRCALPHA)  # transparent surface
+        self.rect = self.image.get_rect(center=self.position)
+
     def triangle(self):
         # Unit vectors
         forward = pygame.Vector2(0, -1).rotate(self.rotation)  # -1 to make "0" point up
@@ -38,6 +43,8 @@ class Player(CircleShape):
 
         if keys[pygame.K_s]:
             self.move(dt)
+
+        self.rect.center = self.position
 
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
