@@ -7,6 +7,7 @@ class Player(CircleShape):
     def __init__(self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
         self.rotation = 0
+        self.shot_cooldown = 0
 
         # Required by pygame.sprite.Sprite
         diameter = self.radius * 2
@@ -46,7 +47,8 @@ class Player(CircleShape):
             self.move(dt)
 
         if keys[pygame.K_SPACE]:
-            self.shoot()
+            if self.shot_cooldown <= 0:
+                self.shoot()
 
         self.rect.center = self.position
 
@@ -55,6 +57,7 @@ class Player(CircleShape):
         self.position += forward * PLAYER_SPEED * dt
 
     def shoot(self):
+        self.shot_cooldown = SHOT_COOLDOWN
         shot = Shot(self.position.x, self.position.y, SHOT_RADIUS)
         shot.velocity = pygame.Vector2(0, -1)
         shot.velocity = shot.velocity.rotate(self.rotation) * PLAYER_SHOT_SPEED
